@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+
+import argparse
+import urllib3
+import os.path
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument('pdb_file')
+
+args=parser.parse_args()
+
+
+#documented at http://www.bioinf.org.uk/abs/abnum/
+
+http = urllib3.PoolManager()
+
+url = 'http://www.bioinf.org.uk/cgi-bin/abnum/abnumpdb.pl'
+
+params = {
+        'dofile': '1',
+        'output': '',
+        'scheme': '-k',
+        'pdb': (os.path.basename(args.pdb_file), open(args.pdb_file).read())
+        }
+
+
+
+response = http.request('POST', url, params)
+
+print(response.data.decode(), end='')
